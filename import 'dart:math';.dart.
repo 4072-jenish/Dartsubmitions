@@ -1,0 +1,44 @@
+import 'dart:math';
+
+class Song {
+  final String title;
+  final String artist;
+  Song(this.title, this.artist);
+}
+
+class Playlist {
+  final List<Song> songs;
+  final List<String> artists;
+
+  Playlist(this.songs, this.artists);
+
+  void play() {
+    print('Playing ${songs[0].title} by ${songs[0].artist}');
+  }
+
+  void shuffle() {
+    final random = Random();
+    for (int i = songs.length - 1; i > 0; i--) {
+      final j = random.nextInt(i + 1);
+      final tempSong = songs[i];
+      final tempArtist = artists[i];
+      songs[i] = songs[j];
+      artists[i] = artists[j];
+      songs[j] = tempSong;
+      artists[j] = tempArtist;
+    }
+  }
+}
+
+void main() {
+  final songs = [
+    Song('Song 1', 'Artist 1'),
+    Song('Song 2', 'Artist 2'),
+    Song('Song 3', 'Artist 3'),
+  ];
+  final artists = ['Artist 1', 'Artist 2', 'Artist 3'];
+  final playlist = Playlist(songs, artists);
+  playlist.play(); // Output: Playing Song 1 by Artist 1
+  playlist.shuffle();
+  playlist.play(); // Output: Playing Song 1 by Artist 2, Song 2 by Artist 3, or Song 3 by Artist 1
+}

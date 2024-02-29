@@ -1,0 +1,20 @@
+class Circle {
+  final double PI = 3.14159;
+  double radius;
+
+  Circle(this.radius);
+
+  double get diameter => radius * 2;
+
+  double get area => PI * radius * radius;
+}
+
+void main() {
+  // Create a Circle object with a radius of 5
+  Circle circle = Circle(5);
+
+  // Print the circle's properties
+  print('Radius: ${circle.radius}');
+  print('Diameter: ${circle.diameter}');
+  print('Area: ${circle.area}');
+}

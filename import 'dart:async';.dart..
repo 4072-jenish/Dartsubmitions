@@ -1,0 +1,113 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+class Timer {
+  Timer({
+    required this.duration,
+    required this.onComplete,
+  });
+
+  final Duration duration;
+  final VoidCallback onComplete;
+
+  TimerSubscription start() {
+    final timerSubscription = Timer(duration, onComplete);
+    timerSubscription.cancel();
+    timerSubscription.resume();
+    return timerSubscription;
+  }
+}
+
+class TimerSubscription {
+  TimerSubscription(this._timerSubscription);
+
+  TimerSubscription.resume(this._timerSubscription);
+
+  TimerSubscription.cancel() : _timerSubscription = null;
+
+  TimerSubscription? _timerSubscription;
+
+  void cancel() {
+    _timerSubscription?.cancel();
+    _timerSubscription = null;
+  }
+
+  bool get isRunning => _timerSubscription != null;
+
+  void pause() {
+    _timerSubscription?.pause();
+  }
+
+  void resume() {
+    if (_timerSubscription == null) {
+      throw StateError('Cannot resume a cancelled timer.');
+    }
+    _timerSubscription?.resume();
+  }
+}
+
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Timer Example'),
+        ),
+        body: TimerExample(),
+      ),
+    );
+  }
+}
+
+class TimerExample extends StatefulWidget {
+  @override
+  _TimerExampleState createState() => _TimerExampleState();
+}
+
+class _TimerExampleState extends State<TimerExample> {
+  Timer? _timer;
+  TimerSubscription? _timerSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer(
+      duration: Duration(seconds: 5),
+      onComplete: () {
+        print('Timer complete!');
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('Timer status: ${_timerSubscription?.isRunning ?? 'not running' }'),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _timerSubscription = _timer?.start();
+            });
+          },
+          child: Text('Start Timer'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _timerSubscription?.cancel();
+              _timerSubscription = null;
+            });
+          },
+          child: Text('Cancel Timer'),
+        ),
+      ],
+    );
+  }
+}
